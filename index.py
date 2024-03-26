@@ -85,6 +85,23 @@ class Admin:
         self.db.cursor.execute("DELETE FROM doctors WHERE id = %s", (doctor_id,))
         self.db.connection.commit()
         print("Doctor deleted successfully")
+
+    def view_patients(self):
+        self.db.cursor.execute("SELECT * FROM patients")
+        patients = self.db.cursor.fetchall()
+        if not patients:
+            print("No patients found")
+        else:
+            print("Patients:")
+            for patient in patients:
+                print(patient)
+    
+    def delete_patient(self):
+        self.view_patients()
+        patient_id = int(input("Enter patient ID to delete: "))
+        self.db.cursor.execute("DELETE FROM patients WHERE id = %s", (patient_id,))
+        self.db.connection.commit()
+        print("Patient deleted successfully")
         
 class Patient:
     def __init__(self, db):
