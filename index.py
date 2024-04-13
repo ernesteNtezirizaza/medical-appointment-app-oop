@@ -52,7 +52,40 @@ class Admin:
             else:
                 print("Invalid choice")
     
-
+    def view_doctors(self):
+        self.db.cursor.execute("SELECT * FROM doctors")
+        doctors = self.db.cursor.fetchall()
+        if not doctors:
+            print("No doctors found")
+        else:
+            print("Doctors:")
+            for doctor in doctors:
+                print(doctor)
+    
+    def add_doctor(self):
+        name = input("Enter doctor's name: ")
+        password = input("Enter doctor's password: ")
+        specialist = input("Enter doctor's specialist: ")
+        available_hours = input("Enter doctor's available hours: ")
+        self.db.cursor.execute("INSERT INTO doctors (name, password, specialist, available_hours) VALUES (%s, %s, %s, %s)", (name, password, specialist, available_hours))
+        self.db.connection.commit()
+        print("Doctor added successfully")
+    
+    def update_doctor(self):
+        self.view_doctors()
+        doctor_id = int(input("Enter doctor ID to update: "))
+        available_hours = input("Enter updated available hours: ")
+        self.db.cursor.execute("UPDATE doctors SET available_hours = %s WHERE id = %s", (available_hours, doctor_id))
+        self.db.connection.commit()
+        print("Doctor updated successfully")
+    
+    def delete_doctor(self):
+        self.view_doctors()
+        doctor_id = int(input("Enter doctor ID to delete: "))
+        self.db.cursor.execute("DELETE FROM doctors WHERE id = %s", (doctor_id,))
+        self.db.connection.commit()
+        print("Doctor deleted successfully")
+        
 class Patient:
     def __init__(self, db):
         self.db = db
