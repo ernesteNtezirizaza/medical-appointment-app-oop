@@ -84,7 +84,7 @@ class Admin:
         doctor_id = int(input("Enter doctor ID to delete: "))
         self.db.cursor.execute("DELETE FROM doctors WHERE id = %s", (doctor_id,))
         self.db.connection.commit()
-        print("Doctor deleted successfully")
+        print("Doctor deleted successfully")  
         
 class Patient:
     def __init__(self, db):
@@ -144,6 +144,27 @@ class Doctor:
                 break
             else:
                 print("Invalid choice")
+                
+    def register(self):
+        name = input("Enter your name: ")
+        password = input("Enter password: ")
+        specialist = input("Enter your specialist: ")
+        available_hours = input("Enter your available hours: ")
+        self.db.cursor.execute("INSERT INTO doctors (name, password, specialist, available_hours) VALUES (%s, %s, %s, %s)", (name, password, specialist, available_hours))
+        self.db.connection.commit()
+        print("Doctor registered successfully")
+    
+    def login(self):
+        # Dummy login for demonstration purposes
+        name = input("Enter your name: ")
+        password = input("Enter your password: ")
+        self.db.cursor.execute("SELECT * FROM doctors WHERE name = %s AND password = %s", (name, password))
+        doctor = self.db.cursor.fetchone()
+        if doctor:
+            self.dashboard(doctor)
+        else:
+            print("Invalid credentials")
+
     
     
     def dashboard(self, doctor):
