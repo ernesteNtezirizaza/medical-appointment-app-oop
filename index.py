@@ -123,7 +123,24 @@ class Patient:
                 break
             else:
                 print("Invalid choice")
+                
+    def register(self):
+        name = input("Enter your name: ")
+        username = input("Enter desired username: ")
+        password = input("Enter password: ")
+        self.db.cursor.execute("INSERT INTO patients (name, username, password) VALUES (%s, %s, %s)", (name, username, password))
+        self.db.connection.commit()
+        print("Patient registered successfully")
     
+    def login(self):
+        username = input("Enter your username: ")
+        password = input("Enter your password: ")
+        self.db.cursor.execute("SELECT * FROM patients WHERE username = %s AND password = %s", (username, password))
+        patient = self.db.cursor.fetchone()
+        if patient:
+            self.dashboard(patient)
+        else:
+            print("Invalid username or password")
 
 class Doctor:
     def __init__(self, db):
