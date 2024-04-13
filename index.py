@@ -9,7 +9,19 @@ class Database:
             database=database
         )
         self.cursor = self.connection.cursor()
+        
+        self.create_tables()
 
+    def create_tables(self):
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS doctors (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), password VARCHAR(255), specialist VARCHAR(255), available_hours VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS patients (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255), password VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS appointments (id INT AUTO_INCREMENT PRIMARY KEY, doctor_id INT, patient_id INT, status VARCHAR(255), appointment_time VARCHAR(255), FOREIGN KEY (doctor_id) REFERENCES doctors(id), FOREIGN KEY (patient_id) REFERENCES patients(id))")
+        
+
+    def create_tables(self):
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS doctors (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), password VARCHAR(255), specialist VARCHAR(255), available_hours VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS patients (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255), password VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS appointments (id INT AUTO_INCREMENT PRIMARY KEY, doctor_id INT, patient_id INT, status VARCHAR(255), appointment_time VARCHAR(255), FOREIGN KEY (doctor_id) REFERENCES doctors(id), FOREIGN KEY (patient_id) REFERENCES patients(id))")
 class Admin:
     def __init__(self, db):
         self.db = db
@@ -51,7 +63,7 @@ class Admin:
                 break
             else:
                 print("Invalid choice")
-    
+    # Function to view doctors
     def view_doctors(self):
         self.db.cursor.execute("SELECT * FROM doctors")
         doctors = self.db.cursor.fetchall()
@@ -70,7 +82,7 @@ class Admin:
         self.db.cursor.execute("INSERT INTO doctors (name, password, specialist, available_hours) VALUES (%s, %s, %s, %s)", (name, password, specialist, available_hours))
         self.db.connection.commit()
         print("Doctor added successfully")
-    
+    #Function to update doctors
     def update_doctor(self):
         self.view_doctors()
         doctor_id = int(input("Enter doctor ID to update: "))
@@ -143,6 +155,28 @@ class Patient:
             else:
                 print("Invalid choice")
                 
+    def search_doctor_by_specialist(self):
+        specialist = input("Enter specialist to search: ")
+        self.db.cursor.execute("SELECT * FROM doctors WHERE specialist = %s", (specialist,))
+        doctors = self.db.cursor.fetchall()
+        if not doctors:
+            print("No doctors found for the given specialist")
+        else:
+            print("Doctors available for", specialist, "specialist:")
+            for doctor in doctors:
+                print("ID:", doctor[0])
+                print("Name:", doctor[1])
+                print("Available Hours:", doctor[4])
+    
+    def book_appointment(self, patient):
+        doctor_id = input("Enter doctor ID to book appointment: ")
+        appointment_time = input("Enter desired appointment time: ")
+        self.db.cursor.execute("INSERT INTO appointments (doctor_id, patient_id, status, appointment_time) VALUES (%s, %s, %s, %s)",
+                       (doctor_id, patient[0], "Pending", appointment_time))
+        self.db.connection.commit()
+        print("Appointment booked successfully")
+
+                
     def register(self):
         name = input("Enter your name: ")
         username = input("Enter desired username: ")
@@ -180,6 +214,7 @@ class Doctor:
                 break
             else:
                 print("Invalid choice")
+
     
     
     def dashboard(self, doctor):
@@ -217,7 +252,7 @@ class Doctor:
         print("Appointment status updated successfully")
 
 def main():
-    db = Database("localhost", "root", "Boaz@123", "medical_appointment")
+    db = Database("localhost", "root", "(MySQL1)", "medical_appointment")
     print("Welcome to the Medical Appointment System")
     while True:
         print("\nMain Menu:")
