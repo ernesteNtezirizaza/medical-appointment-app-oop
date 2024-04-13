@@ -86,6 +86,8 @@ class Admin:
         self.db.connection.commit()
         print("Doctor deleted successfully")
 
+    # view patients done by Irielle Irakoze
+        
     def view_patients(self):
         self.db.cursor.execute("SELECT * FROM patients")
         patients = self.db.cursor.fetchall()
