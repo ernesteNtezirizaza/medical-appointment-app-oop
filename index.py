@@ -9,6 +9,14 @@ class Database:
             database=database
         )
         self.cursor = self.connection.cursor()
+        
+        self.create_tables()
+
+    def create_tables(self):
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS doctors (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), password VARCHAR(255), specialist VARCHAR(255), available_hours VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS patients (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255), password VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS appointments (id INT AUTO_INCREMENT PRIMARY KEY, doctor_id INT, patient_id INT, status VARCHAR(255), appointment_time VARCHAR(255), FOREIGN KEY (doctor_id) REFERENCES doctors(id), FOREIGN KEY (patient_id) REFERENCES patients(id))")
+        
 
 class Admin:
     def __init__(self, db):
@@ -140,6 +148,28 @@ class Patient:
                 break
             else:
                 print("Invalid choice")
+                
+    def search_doctor_by_specialist(self):
+        specialist = input("Enter specialist to search: ")
+        self.db.cursor.execute("SELECT * FROM doctors WHERE specialist = %s", (specialist,))
+        doctors = self.db.cursor.fetchall()
+        if not doctors:
+            print("No doctors found for the given specialist")
+        else:
+            print("Doctors available for", specialist, "specialist:")
+            for doctor in doctors:
+                print("ID:", doctor[0])
+                print("Name:", doctor[1])
+                print("Available Hours:", doctor[4])
+    
+    def book_appointment(self, patient):
+        doctor_id = input("Enter doctor ID to book appointment: ")
+        appointment_time = input("Enter desired appointment time: ")
+        self.db.cursor.execute("INSERT INTO appointments (doctor_id, patient_id, status, appointment_time) VALUES (%s, %s, %s, %s)",
+                       (doctor_id, patient[0], "Pending", appointment_time))
+        self.db.connection.commit()
+        print("Appointment booked successfully")
+
                 
     def register(self):
         name = input("Enter your name: ")
