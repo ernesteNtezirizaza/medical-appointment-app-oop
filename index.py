@@ -109,6 +109,8 @@ class Admin:
             print("Patients:")
             for patient in patients:
                 print(patient)
+
+    # delete patients done by Irielle Irakoze
     
     def delete_patient(self):
         self.view_patients()
