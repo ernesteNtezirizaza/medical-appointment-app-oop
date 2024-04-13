@@ -111,7 +111,8 @@ class Admin:
                 print(patient)
 
     # delete patients done by Irielle Irakoze
-    
+    # delete patients
+                
     def delete_patient(self):
         self.view_patients()
         patient_id = int(input("Enter patient ID to delete: "))
