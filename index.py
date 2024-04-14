@@ -266,7 +266,7 @@ class Doctor:
         print("Appointment status updated successfully")
 
 def main():
-    db = Database("localhost", "root", "Boaz@123", "medical_appointment")
+    db = Database("localhost", "root", "Davidjames85$", "medical_appointment")
     print("Welcome to the Medical Appointment System")
     while True:
         print("\nMain Menu:")
