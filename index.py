@@ -18,6 +18,10 @@ class Database:
         self.cursor.execute("CREATE TABLE IF NOT EXISTS appointments (id INT AUTO_INCREMENT PRIMARY KEY, doctor_id INT, patient_id INT, status VARCHAR(255), appointment_time VARCHAR(255), FOREIGN KEY (doctor_id) REFERENCES doctors(id), FOREIGN KEY (patient_id) REFERENCES patients(id))")
         
 
+    def create_tables(self):
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS doctors (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), password VARCHAR(255), specialist VARCHAR(255), available_hours VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS patients (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255), password VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS appointments (id INT AUTO_INCREMENT PRIMARY KEY, doctor_id INT, patient_id INT, status VARCHAR(255), appointment_time VARCHAR(255), FOREIGN KEY (doctor_id) REFERENCES doctors(id), FOREIGN KEY (patient_id) REFERENCES patients(id))")
 class Admin:
     def __init__(self, db):
         self.db = db
@@ -59,7 +63,7 @@ class Admin:
                 break
             else:
                 print("Invalid choice")
-    
+    # Function to view doctors
     def view_doctors(self):
         self.db.cursor.execute("SELECT * FROM doctors")
         doctors = self.db.cursor.fetchall()
@@ -78,7 +82,7 @@ class Admin:
         self.db.cursor.execute("INSERT INTO doctors (name, password, specialist, available_hours) VALUES (%s, %s, %s, %s)", (name, password, specialist, available_hours))
         self.db.connection.commit()
         print("Doctor added successfully")
-    
+    #Function to update doctors
     def update_doctor(self):
         self.view_doctors()
         doctor_id = int(input("Enter doctor ID to update: "))
@@ -94,6 +98,8 @@ class Admin:
         self.db.connection.commit()
         print("Doctor deleted successfully")
 
+    # view patients done by Irielle Irakoze
+        
     def view_patients(self):
         self.db.cursor.execute("SELECT * FROM patients")
         patients = self.db.cursor.fetchall()
@@ -103,7 +109,10 @@ class Admin:
             print("Patients:")
             for patient in patients:
                 print(patient)
-    
+
+    # delete patients done by Irielle Irakoze
+    # delete patients
+                
     def delete_patient(self):
         self.view_patients()
         patient_id = int(input("Enter patient ID to delete: "))
@@ -208,7 +217,9 @@ class Doctor:
                 break
             else:
                 print("Invalid choice")
-                
+    
+    # registration for doctors
+              
     def register(self):
         name = input("Enter your name: ")
         password = input("Enter password: ")
@@ -217,9 +228,11 @@ class Doctor:
         self.db.cursor.execute("INSERT INTO doctors (name, password, specialist, available_hours) VALUES (%s, %s, %s, %s)", (name, password, specialist, available_hours))
         self.db.connection.commit()
         print("Doctor registered successfully")
+        
+    # login for doctors
     
     def login(self):
-        # Dummy login for demonstration purposes
+        # login class
         name = input("Enter your name: ")
         password = input("Enter your password: ")
         self.db.cursor.execute("SELECT * FROM doctors WHERE name = %s AND password = %s", (name, password))
@@ -227,8 +240,7 @@ class Doctor:
         if doctor:
             self.dashboard(doctor)
         else:
-            print("Invalid credentials")
-
+            print("Invalid credentials")
     
     
     def dashboard(self, doctor):
@@ -266,7 +278,9 @@ class Doctor:
         print("Appointment status updated successfully")
 
 def main():
-    db = Database("localhost", "root", "Davidjames85$", "medical_appointment")
+
+    db = Database("localhost", "root", "(MySQL1)", "medical_appointment")
+
     print("Welcome to the Medical Appointment System")
     while True:
         print("\nMain Menu:")
