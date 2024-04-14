@@ -217,7 +217,9 @@ class Doctor:
                 break
             else:
                 print("Invalid choice")
-                
+    
+    # registration for doctors
+              
     def register(self):
         name = input("Enter your name: ")
         password = input("Enter password: ")
