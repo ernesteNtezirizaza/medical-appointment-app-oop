@@ -82,7 +82,7 @@ class Admin:
         self.db.cursor.execute("INSERT INTO doctors (name, password, specialist, available_hours) VALUES (%s, %s, %s, %s)", (name, password, specialist, available_hours))
         self.db.connection.commit()
         print("Doctor added successfully")
-    
+    #Function to update doctors
     def update_doctor(self):
         self.view_doctors()
         doctor_id = int(input("Enter doctor ID to update: "))
