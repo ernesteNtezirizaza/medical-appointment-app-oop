@@ -221,6 +221,7 @@ class Doctor:
     # registration for doctors
               
     def register(self):
+        # register class name
         name = input("Enter your name: ")
         password = input("Enter password: ")
         specialist = input("Enter your specialist: ")
