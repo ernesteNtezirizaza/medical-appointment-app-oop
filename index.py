@@ -9,9 +9,6 @@ class Database:
             database=database
         )
         self.cursor = self.connection.cursor()
-<<<<<<< HEAD
-        self.create_tables()
-=======
         
         self.create_tables()
 
@@ -20,7 +17,6 @@ class Database:
         self.cursor.execute("CREATE TABLE IF NOT EXISTS patients (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255), password VARCHAR(255))")
         self.cursor.execute("CREATE TABLE IF NOT EXISTS appointments (id INT AUTO_INCREMENT PRIMARY KEY, doctor_id INT, patient_id INT, status VARCHAR(255), appointment_time VARCHAR(255), FOREIGN KEY (doctor_id) REFERENCES doctors(id), FOREIGN KEY (patient_id) REFERENCES patients(id))")
         
->>>>>>> ebaa61f48871b0fba463ac8458458fbf9f9cb8d4
 
     def create_tables(self):
         self.cursor.execute("CREATE TABLE IF NOT EXISTS doctors (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), password VARCHAR(255), specialist VARCHAR(255), available_hours VARCHAR(255))")
@@ -67,7 +63,7 @@ class Admin:
                 break
             else:
                 print("Invalid choice")
-    
+    # Function to view doctors
     def view_doctors(self):
         self.db.cursor.execute("SELECT * FROM doctors")
         doctors = self.db.cursor.fetchall()
@@ -102,8 +98,6 @@ class Admin:
         self.db.connection.commit()
         print("Doctor deleted successfully")
 
-<<<<<<< HEAD
-=======
     def view_patients(self):
         self.db.cursor.execute("SELECT * FROM patients")
         patients = self.db.cursor.fetchall()
@@ -121,7 +115,6 @@ class Admin:
         self.db.connection.commit()
         print("Patient deleted successfully")
         
->>>>>>> ebaa61f48871b0fba463ac8458458fbf9f9cb8d4
 class Patient:
     def __init__(self, db):
         self.db = db
