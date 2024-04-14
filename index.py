@@ -221,7 +221,7 @@ class Doctor:
     # registration for doctors
               
     def register(self):
-        # register class name
+        # register python template
         name = input("Enter your name: ")
         password = input("Enter password: ")
         specialist = input("Enter your specialist: ")
@@ -233,7 +233,7 @@ class Doctor:
     # login for doctors
     
     def login(self):
-        # login class
+        # login python template
         name = input("Enter your name: ")
         password = input("Enter your password: ")
         self.db.cursor.execute("SELECT * FROM doctors WHERE name = %s AND password = %s", (name, password))
