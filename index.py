@@ -228,6 +228,8 @@ class Doctor:
         self.db.cursor.execute("INSERT INTO doctors (name, password, specialist, available_hours) VALUES (%s, %s, %s, %s)", (name, password, specialist, available_hours))
         self.db.connection.commit()
         print("Doctor registered successfully")
+        
+    # login for doctors
     
     def login(self):
         # Dummy login for demonstration purposes
