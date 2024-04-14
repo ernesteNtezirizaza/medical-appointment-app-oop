@@ -9,7 +9,12 @@ class Database:
             database=database
         )
         self.cursor = self.connection.cursor()
+        self.create_tables()
 
+    def create_tables(self):
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS doctors (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), password VARCHAR(255), specialist VARCHAR(255), available_hours VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS patients (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255), password VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS appointments (id INT AUTO_INCREMENT PRIMARY KEY, doctor_id INT, patient_id INT, status VARCHAR(255), appointment_time VARCHAR(255), FOREIGN KEY (doctor_id) REFERENCES doctors(id), FOREIGN KEY (patient_id) REFERENCES patients(id))")
 class Admin:
     def __init__(self, db):
         self.db = db
@@ -85,7 +90,7 @@ class Admin:
         self.db.cursor.execute("DELETE FROM doctors WHERE id = %s", (doctor_id,))
         self.db.connection.commit()
         print("Doctor deleted successfully")
-        
+
 class Patient:
     def __init__(self, db):
         self.db = db
@@ -181,7 +186,7 @@ class Doctor:
         print("Appointment status updated successfully")
 
 def main():
-    db = Database("localhost", "root", "Boaz@123", "medical_appointment")
+    db = Database("localhost", "root", "(MySQL1)", "medical_appointment")
     print("Welcome to the Medical Appointment System")
     while True:
         print("\nMain Menu:")
