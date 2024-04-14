@@ -9,7 +9,18 @@ class Database:
             database=database
         )
         self.cursor = self.connection.cursor()
+<<<<<<< HEAD
         self.create_tables()
+=======
+        
+        self.create_tables()
+
+    def create_tables(self):
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS doctors (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), password VARCHAR(255), specialist VARCHAR(255), available_hours VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS patients (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255), password VARCHAR(255))")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS appointments (id INT AUTO_INCREMENT PRIMARY KEY, doctor_id INT, patient_id INT, status VARCHAR(255), appointment_time VARCHAR(255), FOREIGN KEY (doctor_id) REFERENCES doctors(id), FOREIGN KEY (patient_id) REFERENCES patients(id))")
+        
+>>>>>>> ebaa61f48871b0fba463ac8458458fbf9f9cb8d4
 
     def create_tables(self):
         self.cursor.execute("CREATE TABLE IF NOT EXISTS doctors (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), password VARCHAR(255), specialist VARCHAR(255), available_hours VARCHAR(255))")
@@ -91,6 +102,26 @@ class Admin:
         self.db.connection.commit()
         print("Doctor deleted successfully")
 
+<<<<<<< HEAD
+=======
+    def view_patients(self):
+        self.db.cursor.execute("SELECT * FROM patients")
+        patients = self.db.cursor.fetchall()
+        if not patients:
+            print("No patients found")
+        else:
+            print("Patients:")
+            for patient in patients:
+                print(patient)
+    
+    def delete_patient(self):
+        self.view_patients()
+        patient_id = int(input("Enter patient ID to delete: "))
+        self.db.cursor.execute("DELETE FROM patients WHERE id = %s", (patient_id,))
+        self.db.connection.commit()
+        print("Patient deleted successfully")
+        
+>>>>>>> ebaa61f48871b0fba463ac8458458fbf9f9cb8d4
 class Patient:
     def __init__(self, db):
         self.db = db
@@ -128,7 +159,46 @@ class Patient:
                 break
             else:
                 print("Invalid choice")
+                
+    def search_doctor_by_specialist(self):
+        specialist = input("Enter specialist to search: ")
+        self.db.cursor.execute("SELECT * FROM doctors WHERE specialist = %s", (specialist,))
+        doctors = self.db.cursor.fetchall()
+        if not doctors:
+            print("No doctors found for the given specialist")
+        else:
+            print("Doctors available for", specialist, "specialist:")
+            for doctor in doctors:
+                print("ID:", doctor[0])
+                print("Name:", doctor[1])
+                print("Available Hours:", doctor[4])
     
+    def book_appointment(self, patient):
+        doctor_id = input("Enter doctor ID to book appointment: ")
+        appointment_time = input("Enter desired appointment time: ")
+        self.db.cursor.execute("INSERT INTO appointments (doctor_id, patient_id, status, appointment_time) VALUES (%s, %s, %s, %s)",
+                       (doctor_id, patient[0], "Pending", appointment_time))
+        self.db.connection.commit()
+        print("Appointment booked successfully")
+
+                
+    def register(self):
+        name = input("Enter your name: ")
+        username = input("Enter desired username: ")
+        password = input("Enter password: ")
+        self.db.cursor.execute("INSERT INTO patients (name, username, password) VALUES (%s, %s, %s)", (name, username, password))
+        self.db.connection.commit()
+        print("Patient registered successfully")
+    
+    def login(self):
+        username = input("Enter your username: ")
+        password = input("Enter your password: ")
+        self.db.cursor.execute("SELECT * FROM patients WHERE username = %s AND password = %s", (username, password))
+        patient = self.db.cursor.fetchone()
+        if patient:
+            self.dashboard(patient)
+        else:
+            print("Invalid username or password")
 
 class Doctor:
     def __init__(self, db):
@@ -149,6 +219,7 @@ class Doctor:
                 break
             else:
                 print("Invalid choice")
+
     
     
     def dashboard(self, doctor):
